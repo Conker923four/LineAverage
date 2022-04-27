@@ -16,10 +16,13 @@ file= ""
 def DrawImage():
 	global file, width, frametimes
 	try:
-		width = int(WidthLInput.get())
 		frametimes = int(NLInput.get())
 	except:
 		mg.showinfo(title= "info", message="You provided an invalid width or frametimes, the defaults will be used instead")
+	try:
+		width = int(WidthLInput.get())
+	except:
+		mg.showinfo(title= "info", message="The width value is invalid or has been left blank, we will generate the best width based off of the height of the image")
 	if(file != ""):
 
 		video = cv2.VideoCapture(file)
@@ -42,8 +45,11 @@ def DrawImage():
 		video.release() 
 		cv2.destroyAllWindows()
 
+		try:
+			width = int(WidthLInput.get())
+		except:
 
-
+			width = int(round(currentframe * 0.574)) 
 
 		height = currentframe
 
@@ -83,7 +89,7 @@ def DrawImage():
 		#imgnw.show()
 		splits = file.split("/")
 		lastel = splits[-1].split(".")
-		val = lastel[0] + " lined image of every " + frametimes + " frame/s"
+		val = lastel[0] + " lined image of every " + str(frametimes) + " frames"
 		imgnw2.save( "results/" + val + ".jpg") 
 		imgnw2.show()
 		print("done! saved as: " + val)
@@ -110,27 +116,27 @@ top.title("Video to image")
 
 # the label for width  
 widthL = Label(top, 
-                  text = "Width").place(x = 40,
+                  text = "Width (leave blank for a mobile aspect ratio)").place(x = 5,
                                            y = 60)  
     
 # the label for numberoflines  
 NLL = Label(top, 
-                      text = "Increments between frames").place(x = 40,
+                      text = "Increments between frames").place(x = 5,
                                                y = 100)  
 
 select_button = Button(top, 
-                       text = "select video", command=OpenFile).place(x = 40,
+                       text = "select video", command=OpenFile).place(x = 5,
                                               y = 140)
     
 submit_button = Button(top, 
-                       text = "Submit", command=DrawImage).place(x = 40,
+                       text = "Submit", command=DrawImage).place(x = 5,
                                               y = 180)
-notelabel = Label(top, text="Note, images height will be: (the video time in seconds * framerate) / frametimes ").place(x=40, y=220)                       
+notelabel = Label(top, text="Note, images height will be: (the video time in seconds * framerate) / frametimes ").place(x=5, y=220)                       
 
 WidthLInput = Entry(top, width = 30)
-WidthLInput.place(x = 210, y = 60)      
+WidthLInput.place(x = 250, y = 60)      
 NLInput = Entry(top, width = 30)
-NLInput.place(x = 210, y = 100)  
+NLInput.place(x = 250, y = 100)  
 
  
 top.mainloop() 
